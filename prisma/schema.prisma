@@ -5,9 +5,37 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../generated/prisma.js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id          Int        @id @default(autoincrement())
+  firstName   String?    @map("first_name")
+  lastName    String?    @map("last_name")
+  gmail       String
+  phoneNumber String?    @map("phone_number")
+  status      Boolean
+  userRoles   UserRole[]
+
+  @@map("users")
+}
+
+model UserRole {
+  id     Int  @id @default(autoincrement())
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  role Role
+
+  @@map("users_role")
+}
+
+enum Role {
+  admin
+  teacher
+  student
 }
